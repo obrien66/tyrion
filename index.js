@@ -25,6 +25,10 @@ var html = function(place){
 		</html>
 		`
 }
+
+var fail = function(code, message){
+	return `<!doctype html><html><head><title>${code}</title></head><body>${code}: ${message}</body></html>`
+}
 var time = function(){
 	let d = new Date()
 	let times = [d.getHours(), d.getMinutes(), d.getSeconds()]
@@ -49,7 +53,8 @@ http.createServer((req, res) => {
 		}
 		else if (req.url == "/submit"){
 			fs.readFile("submit.html", (err, data) => {
-				if (err) res.end("<!doctype html><html><head><title>404</title></head><body>404: File Not Found</body></html>")
+				res.writeHead(404, "File Not Found", {"content-type": "text/html"})
+				if (err) res.end(fail("404", "File Not Found"))
 				else  {
 					res.end(data)
 				}
@@ -63,7 +68,10 @@ http.createServer((req, res) => {
 			}
 			else {
 				fs.readFile("goof.html", "utf8", (err, data) => {
-					if (err) res.end("<!doctype html><html><head><title>404</title></head><body>404: File Not Found</body></html>")
+					if (err){
+						res.writeHead(404, "File Not Found", {"content-type": "text/html"})
+						res.end(fail("404", "File Not Found"))
+					}
 					else {
 						res.end(data)
 					}
@@ -78,7 +86,7 @@ http.createServer((req, res) => {
 				body += data
 				if(body.length > 1e7) {
 			        res.writeHead(413, 'Request Entity Too Large', {'Content-Type': 'text/html'});
-			        res.end('<!doctype html><html><head><title>413</title></head><body>413: Request Entity Too Large</body></html>');
+			        res.end(fail("413", "Request Entity Too Large"));
         		}
 			})
 			req.on("end", () => {
@@ -92,7 +100,7 @@ http.createServer((req, res) => {
 	}
 	else {
 		res.writeHead(405, "Method Not Supported", {"content-type": "text/html"})
-		res.end("<!doctype html><html><head><title>405</title></head><body>405: Method Not Supported</body></html>")
+		res.end(fail("405", "Method Not Supported"))
 	}
 }).listen(port)
 
