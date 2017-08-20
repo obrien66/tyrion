@@ -5,10 +5,10 @@ const fs = require("fs"),
       chalk = require("chalk"),
       log = console.log,
       port = data.port
-
-let links = data.link
-let place = data.where
-
+// Make both smaller names and mutable
+var links = data.link
+var place = data.where
+// HTML for redirect
 var html = function(place){
 	return `
 		<!DOCTYPE html>
@@ -17,7 +17,7 @@ var html = function(place){
 			<title>Redirect</title>
 		</head>
 		<body>
-		Redirecting...
+		Redirecting to ${place}
 		<script type="text/javascript">
 			window.location.replace("${place}")
 		</script>
@@ -25,19 +25,26 @@ var html = function(place){
 		</html>
 		`
 }
-
+// HTML for failure
 var fail = function(code, message){
 	return `<!doctype html><html><head><title>${code}</title></head><body>${code}: ${message}</body></html>`
 }
+// Time for CLI
 var time = function(){
 	let d = new Date()
 	let times = [d.getHours(), d.getMinutes(), d.getSeconds()]
-	times.map(function(item){
-		let zero = ""
-		if (item < 10) zero = "0"
-		return zero + String(item)
-	})
-	return times.join(":")
+	let done
+	for (var i = 0; i < times.length; i++) {
+		let string = String(times[i])
+		if (string.length < 2) {
+			string = "0" + string
+		}
+		if (i < 2) {
+			string += ":"
+		}
+		done += string
+	}
+	return done.substring(9)
 }
 
 http.createServer((req, res) => {
@@ -83,13 +90,12 @@ http.createServer((req, res) => {
 		if (req.method == "/send") {
 			let body = ""
 			req.on("data", (data) => {
+				log("Post working...");
 				body += data
-				if(body.length > 1e7) {
-			        res.writeHead(413, 'Request Entity Too Large', {'Content-Type': 'text/html'});
-			        res.end(fail("413", "Request Entity Too Large"));
-        		}
+				if(body.length > 1e6) {req.connection.destroy()}
 			})
 			req.on("end", () => {
+				log("Post Worked!");
 				let formData = qs.parse(body)
 				links.push(formData.ext)
 				place.push(formData.url)
