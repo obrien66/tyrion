@@ -1,0 +1,11 @@
+{
+	"port": 8000,
+	"link": [
+		"goog",
+		"nob"
+	],
+	"where": [
+		"https://google.com",
+		"http://obrien.tech"
+	]
+}

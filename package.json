@@ -1,0 +1,21 @@
+{
+  "name": "tyrion",
+  "version": "1.0.0",
+  "description": "A url shortener",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "url",
+    "short",
+    "shortener",
+    "http"
+  ],
+  "author": "Nicholas O'Brien <nicholas.obrien@ucc.on.ca> (http://obrien.tech)",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.1.0"
+  }
+}
