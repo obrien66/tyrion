@@ -7,6 +7,11 @@
     "test": "node index.js",
     "start": "node index.js"
   },
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/obrien66/tyrion.git"
+  },
+
   "keywords": [
     "url",
     "short",
