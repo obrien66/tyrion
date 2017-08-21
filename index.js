@@ -119,12 +119,21 @@ http.createServer((req, res) => {
 			// log("Post Worked!")
 			// Parse the query string
 			let formData = qs.parse(body)
-			// Save the link and the extension
-			links.push(formData.ext)
-			place.push(formData.url)
-			// Respond nicely
+
 			res.writeHead(200, {"content-type": "text/html"})
-			res.end(`Thanks! <a href="${formData.ext}">http://localhost:8000/${formData.ext}</a> will point to <a href="${formData.url}">${formData.url}</a><br><br><a href="/">home</a>`)
+
+			// if (links.indexOf(formData.ext) == -1){
+			// 	res.end(`<!DOCTYPE html><html><head><title>Oops</title></head><body>It appears that url (${formData.ext}) is taken. Maybe <a href="/submit">try another</a>?</body></html>`)
+			// }
+			// else {
+				// Save the link and the extension
+				links.push(formData.ext)
+				place.push(formData.url)
+				// Respond nicely
+				res.end(`Thanks! <a href="${formData.ext}">http://localhost:8000/${formData.ext}</a> will point to <a href="${formData.url}">${formData.url}</a><br><br><a href="/">home</a>`)
+			// }
+
+
 		})
 	}
 	// If they use a weird method say no thanks
