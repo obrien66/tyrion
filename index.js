@@ -106,7 +106,7 @@ http.createServer((req, res) => {
 		}
 	}
 	// If the method is post
-	else if (req.method == "POST") {
+	else if (req.method == "POST" && req.url == "/post") {
 		let body = ""
 		// Take chuncks and save them in data
 		req.on("data", (data) => {
@@ -122,16 +122,16 @@ http.createServer((req, res) => {
 
 			res.writeHead(200, {"content-type": "text/html"})
 
-			// if (links.indexOf(formData.ext) == -1){
-			// 	res.end(`<!DOCTYPE html><html><head><title>Oops</title></head><body>It appears that url (${formData.ext}) is taken. Maybe <a href="/submit">try another</a>?</body></html>`)
-			// }
-			// else {
+			if (links.indexOf(formData.ext) != -1){
+				res.end(`<!DOCTYPE html><html><head><title>Oops</title></head><body>It appears that url (${formData.ext}) is taken. Maybe <a href="/submit">try another</a>?</body></html>`)
+			}
+			else {
 				// Save the link and the extension
 				links.push(formData.ext)
 				place.push(formData.url)
 				// Respond nicely
 				res.end(`Thanks! <a href="${formData.ext}">http://localhost:8000/${formData.ext}</a> will point to <a href="${formData.url}">${formData.url}</a><br><br><a href="/">home</a>`)
-			// }
+			}
 
 
 		})
