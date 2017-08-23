@@ -7,11 +7,10 @@
     "test": "node index.js",
     "start": "node index.js"
   },
-  "repository" :
-  { "type" : "git"
-  , "url" : "https://github.com/obrien66/tyrion.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/obrien66/tyrion.git"
   },
-
   "keywords": [
     "url",
     "short",
@@ -19,8 +18,5 @@
     "http"
   ],
   "author": "Nicholas O'Brien <nicholas.obrien@ucc.on.ca> (http://obrien.tech)",
-  "license": "MIT",
-  "dependencies": {
-    "chalk": "^2.1.0"
-  }
+  "license": "MIT"
 }

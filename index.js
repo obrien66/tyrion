@@ -2,7 +2,7 @@ const fs = require("fs"),
 	  qs = require("querystring")
 	  http = require("http"),
 	  data = require("./data")
-      chalk = require("chalk"),
+      colour = require("./colour"),
       log = console.log,
       port = data.port
 // Make both smaller names and mutable
@@ -27,7 +27,32 @@ var html = function(place){
 }
 // HTML for failure
 var fail = function(code, message){
-	return `<!doctype html><html><head><title>${code}</title></head><body><h1>${code}: ${message}</h1></body></html>`
+	return `<!DOCTYPE html>
+	<html>
+		<head>
+		<title>${code}</title>
+	</head>
+	<body>
+		<h1>${code}: ${message}</h1>
+	</body>
+	</html>
+	`
+}
+var taken = function(ext){
+	return `
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>${ext} seems to be taken</title>
+			</head>
+			<body>
+				<h3>It appears that url (${ext}) is unavailable. Maybe <a href="/submit">try another</a>?</h3>
+			</body>
+		</html>
+	`
+}
+var thanks = function(ext, link){
+	return `Thanks! <a href="${ext}">http://localhost:8000/${ext}</a> will point to <a href="${link}">${link}</a><br><br><a href="/">home</a>`
 }
 // Time for CLI
 var time = function(){
@@ -49,7 +74,7 @@ var time = function(){
 
 http.createServer((req, res) => {
 	// Show time, http method, and requested URL
-	log(chalk.dim(time()) + " "+ chalk.blue(req.method) + " " + chalk.green(req.url));
+	log(colour.dim(time()) + " "+ colour.blue(req.method) + " " + colour.green(req.url));
 	// If it's a get request
 	if (req.method == "GET") {
 		// And if it's to the root directory
@@ -73,6 +98,18 @@ http.createServer((req, res) => {
 				}
 				// Otherwise send a 200 response and the page
 				else  {
+					res.writeHead(200, {"content-type": "text/html"})
+					res.end(data)
+				}
+			})
+		}
+		else if (req.url == "/main.css"){
+			res.readFiile("main.css", (err, data) => {
+				if (err) {
+					res.writeHead(404, "File Not Found", {"content-type": "text/html"})
+					res.end(fail("404", "File Not Found"))
+				}
+				else {
 					res.writeHead(200, {"content-type": "text/html"})
 					res.end(data)
 				}
@@ -123,14 +160,14 @@ http.createServer((req, res) => {
 			res.writeHead(200, {"content-type": "text/html"})
 
 			if (links.indexOf(formData.ext) != -1){
-				res.end(`<!DOCTYPE html><html><head><title>Oops</title></head><body>It appears that url (${formData.ext}) is taken. Maybe <a href="/submit">try another</a>?</body></html>`)
+				res.end(taken(formData.ext))
 			}
 			else {
 				// Save the link and the extension
 				links.push(formData.ext)
 				place.push(formData.url)
 				// Respond nicely
-				res.end(`Thanks! <a href="${formData.ext}">http://localhost:8000/${formData.ext}</a> will point to <a href="${formData.url}">${formData.url}</a><br><br><a href="/">home</a>`)
+				res.end(thanks(formData.ext, formData.url))
 			}
 
 
@@ -143,4 +180,4 @@ http.createServer((req, res) => {
 	}
 }).listen(port)
 
-log(chalk.bold(`http://localhost:${port}`))
+log(colour.bold(`http://localhost:${port}`))
