@@ -4,7 +4,7 @@
   "description": "A url shortener",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'Do or do not, there is no test'",
+    "test": "echo 'Do or do not. There is no test.'",
     "start": "node index.js"
   },
   "repository": {
