@@ -1,7 +1,7 @@
 const fs = require("fs"),
-	  qs = require("querystring")
+	  querystring = require("querystring"),
 	  http = require("http"),
-	  data = require("./data")
+	  data = require("./data"),
       colour = require("./colour"),
       log = console.log,
       port = data.port
@@ -155,7 +155,7 @@ http.createServer((req, res) => {
 		req.on("end", () => {
 			// log("Post Worked!")
 			// Parse the query string
-			let formData = qs.parse(body)
+			let formData = querystring.parse(body)
 
 			res.writeHead(200, {"content-type": "text/html"})
 
